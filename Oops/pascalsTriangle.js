@@ -26,3 +26,4 @@ console.log(pascalsTriangle(5));
   [1, 4, 6, 4, 1]
 ]
 */
+ 
