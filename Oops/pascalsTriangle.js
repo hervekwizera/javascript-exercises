@@ -26,4 +26,24 @@ console.log(pascalsTriangle(5));
   [1, 4, 6, 4, 1]
 ]
 */
+//######################################################
+function pascalsTriangle(n) {
+    return Array.from({ length: n }, (_, i) =>
+        Array.from({ length: i + 1 }, (_, j) =>
+            j === 0 || j === i ? 1 : pascalsTriangle(i)[i - 1][j - 1] + pascalsTriangle(i)[i - 1][j]
+        )
+    );
+}
+
+console.log(pascalsTriangle(5));
+/*
+[
+  [1],
+  [1, 1],
+  [1, 2, 1],
+  [1, 3, 3, 1],
+  [1, 4, 6, 4, 1]
+]
+*/
+
  
