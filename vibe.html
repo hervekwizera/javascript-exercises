@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Rotating Tag Cloud</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+    #canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<script>
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const radius = 250;
+  const tags = [
+    'HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'MongoDB', 
+    'Express', 'Python', 'Git', 'Linux', 'Tailwind', 'Bootstrap',
+    'SQL', 'TypeScript', 'Flutter', 'Firebase', 'Next.js', 'Figma'
+  ];
+
+  const tagObjs = [];
+  let angleX = 0.001;
+  let angleY = 0.001;
+
+  function initTags() {
+    const len = tags.length;
+    tags.forEach((tag, i) => {
+      const k = -1 + (2 * (i + 1) - 1) / len;
+      const phi = Math.acos(k);
+      const theta = Math.sqrt(len * Math.PI) * phi;
+      const x = radius * Math.sin(phi) * Math.cos(theta);
+      const y = radius * Math.sin(phi) * Math.sin(theta);
+      const z = radius * Math.cos(phi);
+      tagObjs.push({ tag, x, y, z });
+    });
+  }
+
+  function rotate() {
+    tagObjs.forEach(obj => {
+      const y = obj.y * Math.cos(angleX) - obj.z * Math.sin(angleX);
+      const z = obj.y * Math.sin(angleX) + obj.z * Math.cos(angleX);
+      obj.y = y;
+      obj.z = z;
+
+      const x = obj.x * Math.cos(angleY) - obj.z * Math.sin(angleY);
+      obj.z = obj.x * Math.sin(angleY) + obj.z * Math.cos(angleY);
+      obj.x = x;
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    tagObjs.forEach(obj => {
+      const scale = 400 / (400 + obj.z);
+      const x = obj.x * scale + canvas.width / 2;
+      const y = obj.y * scale + canvas.height / 2;
+      ctx.font = `${15 * scale}px Arial`;
+      ctx.fillStyle = `rgba(0, 255, 255, ${scale})`;
+      ctx.fillText(obj.tag, x, y);
+    });
+  }
+
+  function animate() {
+    rotate();
+    draw();
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener("mousemove", e => {
+    angleY = (e.clientX - canvas.width / 2) * 0.00001;
+    angleX = (e.clientY - canvas.height / 2) * 0.00001;
+  });
+
+  initTags();
+  animate();
+</script>
+</body>
+</html>
