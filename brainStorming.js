@@ -28,3 +28,20 @@ function example(Name) {
 
 example('Hervé'); // Example with name
 example(); // Example with default name
+
+
+//########################################
+
+const products = [
+    { name: "Shirt", price: 20 },
+    { name: "Pants", price: 30 }
+  ];
+  
+  const discounted = products.map(p => ({
+    name: p.name,
+    price: p.price * 0.9 // 10% discount
+  }));
+  
+  console.log(discounted);
+  // [{ name: "Shirt", price: 18 }, { name: "Pants", price: 27 }]
+  
